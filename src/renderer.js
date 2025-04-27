@@ -14,3 +14,12 @@ receiveRenderer('fromMain', (arg) => {
     console.log(arg); // prints "pong"
 });
 
+
+
+const btn1 = document.getElementById('btn')
+const filePathElement = document.getElementById('filePath')
+
+btn1.addEventListener('click', async () => {
+  const filePath = await window.electronAPI.openFile()
+  filePathElement.innerText = filePath
+})

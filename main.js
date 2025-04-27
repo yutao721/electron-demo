@@ -1,6 +1,6 @@
 
 
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, Menu, MenuItem } = require('electron');
 const path = require('node:path');
 const fs = require('node:fs');
 
@@ -13,7 +13,16 @@ function createWindow () {
     }
   });
 
+  // win.webContents.openDevTools();
+
   win.loadFile(path.join(__dirname, 'src/index.html'));
+}
+
+async function handleFileOpen() {
+  const { canceled, filePaths } = await dialog.showOpenDialog({})
+  if (!canceled) {
+    return filePaths[0]
+  }
 }
 
 app.whenReady().then(() => {
@@ -27,6 +36,8 @@ app.whenReady().then(() => {
     console.log(arg); // prints "ping"
     event.reply('fromRenderer', 'pong'); // send back to renderer process
   });
+
+  ipcMain.handle('dialog:openFile', handleFileOpen)
 
   createWindow();
 
